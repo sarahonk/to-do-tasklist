@@ -6,6 +6,7 @@ import todo.tasklist.model.Task;
 import todo.tasklist.repository.TaskRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -26,5 +27,14 @@ public class TaskService {
 
     public void deleteTaskById(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public Task getTaskById(Long id) {
+        Optional<Task> optionalTask = taskRepository.findById(id);
+        return optionalTask.orElse(null);
+    }
+
+    public Task updateTask(Task task) {
+        return taskRepository.save(task);
     }
 }

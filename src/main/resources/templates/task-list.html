@@ -13,7 +13,8 @@
             <form th:action="@{'/tasks/' + ${task.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>
-        </li>
+            <a th:href="@{'/tasks/' + ${task.id} + '/edit'}" style="color: blue;">Edit</a>
+        </li>        
     </ul>
     <br>
     <a href="/tasks/add">Add New Task</a>
