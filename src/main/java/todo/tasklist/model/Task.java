@@ -15,18 +15,14 @@ public class Task {
     private String description;
     private LocalDate dueDate;
 
-    // Constructors
     public Task() {
-        // Default constructor
     }
 
-    public Task(Long id, String description, LocalDate dueDate) {
-        this.id = id;
+    public Task(String description, LocalDate dueDate) {
         this.description = description;
         this.dueDate = dueDate;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }

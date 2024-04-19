@@ -1,8 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Tasks</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        strong {
+            font-weight: bold;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .action-buttons {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Tasks</h2>
@@ -10,13 +56,19 @@
         <li th:each="task : ${tasks}">
             <strong>Description:</strong> <span th:text="${task.description}"></span><br>
             <strong>Due Date:</strong> <span th:text="${task.dueDate}"></span><br>
-            <form th:action="@{'/tasks/' + ${task.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
-            </form>
-            <a th:href="@{'/tasks/' + ${task.id} + '/edit'}" style="color: blue;">Edit</a>
+            <div class="action-buttons">
+                <form style="display: inline;" th:action="@{'/tasks/' + ${task.id} + '/delete'}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+                <a href="@{'/tasks/' + ${task.id} + '/edit'}">Edit</a>
+            </div>
         </li>        
     </ul>
     <br>
+    <form action="/login" method="get">
+        <button type="submit">Login</button>
+        <input type="hidden" name="_csrf" value="d63f746f-c5f6-4cc6-99c0-9220ff784b23" />
+    </form>
     <a href="/tasks/add">Add New Task</a>
 </body>
 </html>
