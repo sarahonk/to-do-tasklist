@@ -19,25 +19,29 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+        private final UserService userService;
+
         @Autowired
-        private UserService userService;
+        public SecurityConfig(UserService userService) {
+                this.userService = userService;
+        }
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout") // Specify the logout URL
+                                                .logoutSuccessUrl("/tasks") // Redirect to "/tasks" after logout
+                                                .permitAll()) // Allow everyone to logout
                                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                                 .requestMatchers(antMatcher("/tasks")).permitAll() // Allow access to
                                                                                                    // /tasks for all
                                                 .anyRequest().authenticated()) // Require authentication for all other
                                                                                // requests
-                                .formLogin(formLogin -> formLogin
-                                                // .loginPage("/login")
+                                .formLogin(formLogin -> formLogin // .loginPage("/login")
                                                 .defaultSuccessUrl("/tasks", true) // Redirect to "/tasks" after
                                                                                    // successful login
-                                                .permitAll())
-                                .logout(logout -> logout
-                                                .logoutUrl("/logout") // Specify the logout URL
-                                                .permitAll()); // Allow everyone to logout
+                                                .permitAll());
 
                 return http.build();
         }

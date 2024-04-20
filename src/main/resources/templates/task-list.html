@@ -50,25 +50,31 @@
         }
     </style>
 </head>
+</head>
 <body>
     <h2>Tasks</h2>
+    <p th:if="${#authorization.expression('isAuthenticated()')}" th:text="'Logged in as: ' + ${#authentication.principal.username}"></p>
     <ul>
         <li th:each="task : ${tasks}">
             <strong>Description:</strong> <span th:text="${task.description}"></span><br>
             <strong>Due Date:</strong> <span th:text="${task.dueDate}"></span><br>
-            <div class="action-buttons">
+            <div class="action-buttons" th:if="${#authorization.expression('isAuthenticated()')}">
                 <form style="display: inline;" th:action="@{'/tasks/' + ${task.id} + '/delete'}" method="post">
                     <button type="submit">Delete</button>
                 </form>
-                <a href="@{'/tasks/' + ${task.id} + '/edit'}">Edit</a>
+                <a th:href="@{'/tasks/' + ${task.id} + '/edit'}">Edit</a>
             </div>
         </li>        
     </ul>
     <br>
-    <form action="/login" method="get">
+    <a th:if="${#authorization.expression('isAuthenticated()')}" href="/tasks/add">Add New Task</a>
+    <br>
+    <form th:if="${#authorization.expression('isAuthenticated()')}" action="/logout" method="post">
+        <button type="submit">Logout</button>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    </form> 
+    <form th:unless="${#authorization.expression('isAuthenticated()')}" action="/login" method="get">
         <button type="submit">Login</button>
-        <input type="hidden" name="_csrf" value="d63f746f-c5f6-4cc6-99c0-9220ff784b23" />
-    </form>
-    <a href="/tasks/add">Add New Task</a>
+    </form>      
 </body>
 </html>
