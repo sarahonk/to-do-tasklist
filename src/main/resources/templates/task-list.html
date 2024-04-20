@@ -94,6 +94,11 @@
 </head>
 <body>
     <h2>Tasks</h2>
+
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <p>Logged in as: <span th:text="${#authentication.principal.username}"></span></p>
+        </div>
+    <br>
     <div class="task-container" th:each="task : ${tasks}">
         <ul>
             <li>
