@@ -38,7 +38,8 @@ public class SecurityConfig {
                                                                                                    // /tasks for all
                                                 .anyRequest().authenticated()) // Require authentication for all other
                                                                                // requests
-                                .formLogin(formLogin -> formLogin // .loginPage("/login")
+                                .formLogin(formLogin -> formLogin
+                                                .loginPage("/login")
                                                 .defaultSuccessUrl("/tasks", true) // Redirect to "/tasks" after
                                                                                    // successful login
                                                 .permitAll());
