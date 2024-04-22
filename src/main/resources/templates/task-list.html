@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tasks</title>
-    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <link type="text/css" rel="stylesheet" href="/bootstrap.min.css" th:href="@{/bootstrap.min.css}" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -95,9 +95,9 @@
 <body>
     <h2>Tasks</h2>
 
-        <div th:if="${#authorization.expression('isAuthenticated()')}">
-            <p>Logged in as: <span th:text="${#authentication.principal.username}"></span></p>
-        </div>
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <p>Logged in as: <span th:text="${#authentication.principal.username}"></span></p>
+    </div>
     <br>
     <div class="task-container" th:each="task : ${tasks}">
         <ul>
@@ -122,6 +122,9 @@
     </form> 
     <form th:unless="${#authorization.expression('isAuthenticated()')}" action="/login" method="get">
         <button type="submit" class="login-button">Login</button>
+    </form>
+    <form th:unless="${#authorization.expression('isAuthenticated()')}" action="/register" method="get">
+        <button type="submit" class="register-button">Register</button>
     </form>      
 </body>
 </html>

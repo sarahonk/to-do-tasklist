@@ -36,15 +36,14 @@ public class TasklistApplication {
 			taskRepository.save(task4);
 
 			User user1 = new User("user", "$2a$10$4kWiiL7c188te3sqTZpKiOJMC8AJR2X4EAH8mKF5OOq/u1LOixz8e", "USER");
-			// $2a$10$4kWiiL7c188te3sqTZpKiOJMC8AJR2X4EAH8mKF5OOq/u1LOixz8e
-			// User user2 = new User("admin",
-			// "$2a$10$jrCuPRY1/ZGHA9d5jzkN9.OOk.b4j.fMRc0u.uGK4WK8Bio.5r6qW", "ADMIN");
-			// $2a$10$jrCuPRY1/ZGHA9d5jzkN9.OOk.b4j.fMRc0u.uGK4WK8Bio.5r6qW
 			userRepository.save(user1);
-			// userRepository.save(user2);
 
 			for (Task task : taskRepository.findAll()) {
 				log.info(task.toString());
+			}
+
+			for (User user : userRepository.findAll()) {
+				log.info(user.toString());
 			}
 
 		};

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import todo.tasklist.service.UserService;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
@@ -27,28 +27,29 @@ public class SecurityConfig {
         }
 
         @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        public SecurityFilterChain configure(HttpSecurity http) throws Exception {
                 http
                                 .logout(logout -> logout
-                                                .logoutUrl("/logout") // Specify the logout URL
-                                                .logoutSuccessUrl("/tasks") // Redirect to "/tasks" after logout
-                                                .permitAll()) // Allow everyone to logout
+                                                .logoutUrl("/logout")
+                                                .logoutSuccessUrl("/tasks")
+                                                .permitAll())
                                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                                .requestMatchers(antMatcher("/tasks")).permitAll() // Allow access to
-                                                                                                   // /tasks for all
-                                                .anyRequest().authenticated()) // Require authentication for all other
-                                                                               // requests
+                                                .requestMatchers(antMatcher("/tasks")).permitAll()
+                                                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**")
+                                                .permitAll()
+                                                .requestMatchers(antMatcher("/register")).permitAll()
+                                                .requestMatchers(toH2Console()).permitAll()
+                                                .anyRequest().authenticated())
                                 .formLogin(formLogin -> formLogin
                                                 .loginPage("/login")
-                                                .defaultSuccessUrl("/tasks", true) // Redirect to "/tasks" after
-                                                                                   // successful login
+                                                .defaultSuccessUrl("/tasks", true)
                                                 .permitAll());
 
                 return http.build();
         }
 
         @Bean
-        public UserDetailsService userDetailsService(UserService userService) {
+        public UserDetailsService userDetailsService() {
                 return userService;
         }
 
@@ -57,15 +58,10 @@ public class SecurityConfig {
                 return new BCryptPasswordEncoder();
         }
 
-        @Autowired
-        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-                auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
-        }
-
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
                 DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-                authProvider.setUserDetailsService(userService);
+                authProvider.setUserDetailsService(userDetailsService());
                 authProvider.setPasswordEncoder(passwordEncoder());
                 return authProvider;
         }
